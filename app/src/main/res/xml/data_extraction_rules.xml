@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 12+: no se respaldan ni transfieren credenciales, sesión ni base de datos. -->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="database" path="smartpark.db" />
+        <exclude domain="sharedpref" path="sesion_segura.xml" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="database" path="smartpark.db" />
+        <exclude domain="sharedpref" path="sesion_segura.xml" />
+    </device-transfer>
+</data-extraction-rules>

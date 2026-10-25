@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Se excluyen la base de datos y la sesión de los respaldos (Android 11 o inferior). -->
+<full-backup-content>
+    <exclude domain="database" path="smartpark.db" />
+    <exclude domain="sharedpref" path="sesion_segura.xml" />
+</full-backup-content>

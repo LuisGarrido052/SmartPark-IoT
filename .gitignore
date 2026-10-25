@@ -1,0 +1,16 @@
+# Android Studio / IntelliJ
+*.iml
+.idea/
+# Gradle
+.gradle/
+build/
+/captures
+.externalNativeBuild
+.cxx
+# Archivos locales de cada PC (ruta del SDK, llaves)
+local.properties
+*.jks
+*.keystore
+# Sistema
+.DS_Store
+Thumbs.db

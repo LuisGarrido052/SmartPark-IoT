@@ -1,0 +1,10 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Tema base del sistema (sin dependencias extra). Los colores reales se definen en Compose (ui/theme). -->
+    <style name="Base.Theme.Estacionamiento" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/fondo</item>
+        <item name="android:statusBarColor">@color/fondo</item>
+        <item name="android:navigationBarColor">@color/fondo</item>
+    </style>
+
+    <style name="Theme.Estacionamiento" parent="Base.Theme.Estacionamiento" />
+</resources>
