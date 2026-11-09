@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pantalla de Login (rúbrica 2.1.1.1): EditText para usuario y contraseña. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo"
+    android:fillViewport="true"
+    tools:context=".ui.LoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_logo"
+            android:gravity="center"
+            android:text="P"
+            android:textColor="@color/verde_libre"
+            android:textSize="44sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            style="@style/Texto.Titulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/marca"
+            android:textSize="30sp" />
+
+        <TextView
+            style="@style/Texto.Secundario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/subtitulo_app"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            style="@style/Tarjeta"
+            android:layout_marginTop="28dp"
+            android:padding="20dp">
+
+            <TextView
+                style="@style/Texto.Seccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_titulo"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/lblUsuario"
+                style="@style/Texto.Etiqueta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:labelFor="@+id/etUsuario"
+                android:text="@string/campo_usuario" />
+
+            <EditText
+                android:id="@+id/etUsuario"
+                style="@style/Campo"
+                android:autofillHints="username"
+                android:hint="@string/hint_usuario"
+                android:imeOptions="actionNext"
+                android:inputType="text|textNoSuggestions"
+                android:maxLength="20" />
+
+            <TextView
+                android:id="@+id/lblPassword"
+                style="@style/Texto.Etiqueta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:labelFor="@+id/etPassword"
+                android:text="@string/campo_password" />
+
+            <EditText
+                android:id="@+id/etPassword"
+                style="@style/Campo"
+                android:autofillHints="password"
+                android:hint="@string/hint_password"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:maxLength="64" />
+
+            <CheckBox
+                android:id="@+id/cbMostrarPassword"
+                style="@style/Opcion"
+                android:layout_marginTop="4dp"
+                android:text="@string/mostrar_password"
+                android:textColor="@color/texto_secundario" />
+
+            <TextView
+                android:id="@+id/tvErrorLogin"
+                style="@style/Texto.Error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:visibility="gone"
+                tools:text="Usuario o contraseña incorrectos"
+                tools:visibility="visible" />
+
+            <Button
+                android:id="@+id/btnIngresar"
+                style="@style/Boton.Primario"
+                android:layout_marginTop="16dp"
+                android:text="@string/btn_ingresar" />
+
+            <ProgressBar
+                android:id="@+id/pbLogin"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:indeterminateTint="@color/verde_libre"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/Texto.Secundario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sin_cuenta"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/btnIrRegistro"
+                style="@style/Boton.Texto"
+                android:text="@string/btn_crear_cuenta" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/Texto.Etiqueta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/pie_seguridad"
+            android:textSize="12sp" />
+    </LinearLayout>
+</ScrollView>

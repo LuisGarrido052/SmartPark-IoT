@@ -16,6 +16,7 @@
     <uses-feature android:name="android.hardware.wifi" android:required="false" />
 
     <application
+        android:name=".SmartParkApp"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -26,8 +27,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Estacionamiento"
         tools:targetApi="31">
+        <!-- Todas las pantallas son Activities con vistas XML (res/layout) -->
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.LoginActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -36,6 +38,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.RegistroActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.ConductorActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.OperadorActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.ConexionActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

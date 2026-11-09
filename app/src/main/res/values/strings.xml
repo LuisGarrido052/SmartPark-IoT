@@ -1,3 +1,116 @@
 <resources>
     <string name="app_name">Estacionamiento Inteligente</string>
+    <string name="marca">SmartPark IoT</string>
+    <string name="subtitulo_app">Sistema de Estacionamiento Inteligente</string>
+
+    <!-- Login (rúbrica 2.1.1.1) -->
+    <string name="login_titulo">Iniciar sesión</string>
+    <string name="campo_usuario">Usuario</string>
+    <string name="campo_password">Contraseña</string>
+    <string name="hint_usuario">Ingresa tu usuario</string>
+    <string name="hint_password">Ingresa tu contraseña</string>
+    <string name="mostrar_password">Mostrar contraseña</string>
+    <string name="btn_ingresar">Ingresar</string>
+    <string name="verificando">Verificando…</string>
+    <string name="sin_cuenta">¿No tienes cuenta?</string>
+    <string name="btn_crear_cuenta">Crear cuenta</string>
+    <string name="pie_seguridad">Credenciales protegidas con hash PBKDF2 · Bloqueo tras 5 intentos fallidos · ISO/IEC 27400</string>
+
+    <!-- Registro -->
+    <string name="registro_titulo">Crear cuenta</string>
+    <string name="tipo_cuenta">Tipo de cuenta</string>
+    <string name="rol_conductor">Conductor</string>
+    <string name="rol_operador">Operador</string>
+    <string name="ayuda_usuario">4 a 20 caracteres (letras, números, punto o guion bajo)</string>
+    <string name="ayuda_password">Mínimo 8 caracteres, con letras y números</string>
+    <string name="campo_confirmacion">Repetir contraseña</string>
+    <string name="campo_patente">Patente del vehículo</string>
+    <string name="hint_patente">Ej: ABCD12</string>
+    <string name="campo_codigo">Código de autorización de operador</string>
+    <string name="ayuda_codigo">Solo personal autorizado del recinto</string>
+    <string name="error_codigo_vacio">Ingresa el código entregado por el administrador</string>
+    <string name="btn_volver">Volver</string>
+
+    <!-- Conductor -->
+    <string name="btn_conexion">Conexión</string>
+    <string name="btn_salir">Salir</string>
+    <string name="modo_local">Modo local: conéctate al teléfono del operador para sincronizar las plazas.</string>
+    <string name="plazas_libres">Plazas libres</string>
+    <string name="leyenda">● Libre   ● Ocupada   ● Reservada</string>
+    <string name="nivel_1">Nivel 1</string>
+    <string name="nivel_2">Nivel 2</string>
+    <string name="btn_buscar">Buscar plaza más cercana</string>
+    <string name="tiempo_restante">Tiempo restante de reserva</string>
+    <string name="btn_abrir_entrada">Abrir barrera de acceso</string>
+    <string name="btn_abrir_salida">Abrir barrera de salida</string>
+    <string name="btn_cancelar_reserva">Cancelar reserva</string>
+    <string name="btn_reservar">Reservar</string>
+    <string name="btn_cancelar">Cancelar</string>
+    <string name="sin_plazas_libres">No hay plazas libres en este nivel</string>
+    <string name="toca_plaza">Toca una plaza libre (verde) para reservarla</string>
+
+    <!-- Operador -->
+    <string name="panel_operador">Panel de Operador</string>
+    <string name="kpi_aforo">Aforo</string>
+    <string name="kpi_libres">Libres</string>
+    <string name="kpi_reservas">Reservas</string>
+    <string name="control_barreras">Control de barreras</string>
+    <string name="barrera_entrada">Barrera de entrada</string>
+    <string name="barrera_salida">Barrera de salida</string>
+    <string name="plazas_contingencia">Plazas (toca para corregir en contingencia)</string>
+    <string name="log_eventos">Log de eventos (datos de sensores)</string>
+    <string name="sin_eventos">Sin eventos registrados</string>
+    <string name="red_cifrada">Red IoT cifrada AES-256-GCM + HMAC-SHA256 · ISO/IEC 27400</string>
+
+    <!-- Conexión -->
+    <string name="conexion_titulo">Conexión inalámbrica</string>
+    <string name="medio_wifi">Wi-Fi</string>
+    <string name="medio_bt">Bluetooth</string>
+    <string name="ayuda_pin_operador">El conductor debe ingresar este PIN. Con él se cifran y firman los mensajes.</string>
+    <string name="campo_pin">PIN del operador</string>
+    <string name="hint_pin">6 dígitos</string>
+    <string name="campo_ip">IP del teléfono del operador</string>
+    <string name="btn_servidor_wifi">Iniciar servidor Wi-Fi</string>
+    <string name="btn_servidor_bt">Esperar conexión Bluetooth</string>
+    <string name="btn_conectar_wifi">Conectar por Wi-Fi</string>
+    <string name="btn_desconectar">Desconectar</string>
+    <string name="btn_permiso_bt">Permitir acceso a Bluetooth</string>
+    <string name="vincular_bt">Vincula ambos teléfonos antes en Ajustes &gt; Bluetooth.</string>
+    <string name="dispositivos_vinculados">Dispositivos vinculados (toca uno para conectar):</string>
+    <string name="sin_vinculados">No hay dispositivos vinculados.</string>
+    <string name="arduino_titulo">Placa Arduino UNO R3 (módulo HC-05)</string>
+    <string name="arduino_ayuda">Sensores de plaza (HC-SR04) y barrera (servo). Vincula el HC-05 en Ajustes &gt; Bluetooth (PIN habitual 1234).</string>
+    <string name="sin_bluetooth">Este teléfono no tiene Bluetooth</string>
+    <string name="bt_apagado">Activa el Bluetooth del teléfono</string>
+    <string name="consejo_hotspot">Consejo: si la red Wi-Fi de la sede bloquea la comunicación entre equipos, activa la zona Wi-Fi (hotspot) en el teléfono del operador y conecta el otro teléfono a ella. La IP del operador suele ser 192.168.43.1.</string>
+    <string name="error_pin">El PIN debe tener 6 dígitos</string>
+    <string name="error_ip">Ingresa una IP válida (ej: 192.168.43.1)</string>
+
+    <!-- Formatos -->
+    <string name="formato_enlace">%1$s: %2$s</string>
+    <string name="formato_hola">Hola, %1$s · %2$s</string>
+    <string name="formato_operador">%1$s · PIN de vinculación %2$s</string>
+    <string name="formato_libres">%1$d / %2$d</string>
+    <string name="formato_reserva">Plaza #%1$d - Nivel %2$d reservada</string>
+    <string name="formato_estacionado">Estás en la plaza #%1$d</string>
+    <string name="formato_patente">Patente: %1$s</string>
+    <string name="formato_dialogo_titulo">Reservar plaza %1$d</string>
+    <string name="formato_dialogo">Nivel %1$d. La reserva dura 15 minutos y se libera automáticamente si no llegas.\nPatente: %2$s</string>
+    <string name="formato_pin">PIN de vinculación: %1$s</string>
+    <string name="formato_ip">IP de este teléfono: %1$s · puerto %2$d</string>
+    <string name="sin_red_wifi">sin red Wi-Fi</string>
+    <string name="formato_de_plazas">de %1$d plazas</string>
+    <string name="ocupacion">ocupación</string>
+    <string name="activas">activas</string>
+    <string name="abierta">ABIERTA</string>
+    <string name="cerrada">CERRADA</string>
+    <string name="todos">Todos</string>
+    <string name="enlace_operador">Operador</string>
+    <string name="enlace_conductor">Conductor</string>
+    <string name="enlace_arduino">Arduino</string>
+    <string name="enlace_estado">Estado</string>
+    <string name="titulo_tel_operador">Recibir al teléfono del Conductor</string>
+    <string name="titulo_tel_conductor">Conectar con el teléfono del Operador</string>
+    <string name="permiso_bt_denegado">Sin permiso de Bluetooth no se pueden listar los dispositivos</string>
+    <string name="conectando_a">Conectando a %1$s…</string>
 </resources>

@@ -1,6 +1,6 @@
 # SmartPark IoT – Estacionamiento Inteligente
 
-App Android (Kotlin + Jetpack Compose) para el ramo **TI3042 Aplicaciones Móviles para IoT** (Inacap).
+App Android (Kotlin + vistas en **layouts XML**) para el ramo **TI3042 Aplicaciones Móviles para IoT** (Inacap).
 Una misma APK se instala en dos teléfonos: uno inicia sesión como **Conductor** y el otro como **Operador**.
 Se comunican por **Wi-Fi** o **Bluetooth**, y opcionalmente con una placa **Arduino UNO R3 + HC-05**.
 
@@ -11,11 +11,11 @@ Se comunican por **Wi-Fi** o **Bluetooth**, y opcionalmente con una placa **Ardu
 | Android Studio | Hedgehog 2023.1 o más nuevo | AGP 8.2 es soportado desde Hedgehog |
 | Android Gradle Plugin | 8.2.2 | estable y ampliamente soportado |
 | Gradle | 8.7 | funciona con JDK 17 y JDK 21 (el que trae Android Studio) |
-| Kotlin | 1.9.22 (Compose Compiler 1.5.10) | sin plugins extra |
+| Kotlin | 1.9.22 | sin plugins extra |
 | compileSdk / targetSdk | 34 | |
 | minSdk | 26 (Android 8.0) | PBKDF2-SHA256 y Base64 nativos |
 
-No se usan Room, KSP, kapt, Hilt ni Firebase: menos plugins = menos problemas de compatibilidad.
+No se usan Compose, AppCompat, Room, KSP, kapt, Hilt ni Firebase (solo `kotlinx-coroutines-android`): menos plugins = menos problemas de compatibilidad.
 Si Android Studio ofrece "actualizar AGP", se puede rechazar sin problema.
 
 ## Cómo abrir el proyecto
@@ -39,7 +39,7 @@ También se pueden crear cuentas desde **Crear cuenta**. Para crear un Operador 
 
 ```
 app/src/main/java/cl/inacap/estacionamiento/
-├── MainActivity.kt            Punto de entrada
+├── SmartParkApp.kt            Application: crea SQLite y repositorios
 ├── ServiceLocator.kt          Inyección de dependencias manual
 ├── data/
 │   ├── model/Modelos.kt       Plaza, Usuario, Rol, Barrera, Evento, Sesion
@@ -56,19 +56,31 @@ app/src/main/java/cl/inacap/estacionamiento/
 │   ├── CanalSeguro.kt         Cifrado + firma HMAC + anti-replay de mensajes
 │   └── Validaciones.kt        Reglas de formularios
 └── ui/
-    ├── screens/               Login, Registro, Conductor, Operador, Conexión
-    ├── viewmodel/             AuthViewModel, ParkingViewModel
-    ├── navigation/AppNav.kt   Navegación según rol
-    ├── components/            Tarjetas de plaza, KPIs, indicadores
-    └── theme/Theme.kt         Material 3 modo oscuro
+    ├── BaseActivity.kt        Base común: ciclo de vida, control de acceso por rol
+    ├── LoginActivity.kt       Login (EditText usuario + EditText contraseña)
+    ├── RegistroActivity.kt    Crear cuenta Conductor / Operador
+    ├── ConductorActivity.kt   Mapa de plazas, reserva con temporizador, barreras
+    ├── OperadorActivity.kt    KPIs, control de barreras, log de eventos
+    ├── ConexionActivity.kt    Wi-Fi / Bluetooth / Arduino
+    └── viewmodel/             AuthViewModel, ParkingViewModel
+app/src/main/res/
+├── layout/                    Vistas XML de cada pantalla
+│   ├── activity_login.xml     Login con campos usuario y contraseña
+│   ├── activity_registro.xml
+│   ├── activity_conductor.xml
+│   ├── activity_operador.xml
+│   ├── activity_conexion.xml
+│   └── item_*.xml / include_*.xml   Celda de plaza, fila de evento, encabezado, etc.
+├── drawable/                  Fondos de tarjetas, botones, campos y plazas
+└── values/                    colors.xml, strings.xml, themes.xml (estilos modo oscuro)
 arduino/smartpark_r3/          Sketch para Arduino UNO R3
 ```
 
 ## Demostración con dos teléfonos (Wi-Fi)
 
 1. Instala la app en ambos teléfonos.
-2. Teléfono 2: entra como `operador` → ⚙ Conexión → Wi-Fi → **Iniciar servidor Wi-Fi**. Anota la **IP** y el **PIN**.
-3. Teléfono 1: entra como `conductor` → ⚙ Conexión → Wi-Fi → escribe IP y PIN → **Conectar**.
+2. Teléfono 2: entra como `operador` → **Conexión** → Wi-Fi → **Iniciar servidor Wi-Fi**. Anota la **IP** y el **PIN**.
+3. Teléfono 1: entra como `conductor` → **Conexión** → Wi-Fi → escribe IP y PIN → **Conectar**.
 4. El conductor reserva una plaza: el operador la ve en ámbar, baja el aforo y aparece en el log.
 5. El conductor pulsa **Abrir barrera de acceso**: el operador ve la barrera ABIERTA y se cierra sola a los 5 s.
 
@@ -82,7 +94,7 @@ conductor elige al operador de la lista e ingresa el PIN.
 
 1. Carga `arduino/smartpark_r3/smartpark_r3.ino` con Arduino IDE (librerías incluidas: SoftwareSerial y Servo).
 2. Vincula el HC-05 en Ajustes > Bluetooth del teléfono (PIN `1234` o `0000`).
-3. En la app (idealmente en el Operador): ⚙ Conexión → *Placa Arduino* → elige el HC-05.
+3. En la app (idealmente en el Operador): **Conexión** → *Placa Arduino* → elige el HC-05.
 4. Al tapar un sensor HC-SR04, la plaza 101/102 pasa a **Ocupada** en ambos teléfonos.
    Al abrir una barrera desde la app, el servo se mueve.
 

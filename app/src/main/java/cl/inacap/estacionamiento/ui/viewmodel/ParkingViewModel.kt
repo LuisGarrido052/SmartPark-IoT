@@ -1,12 +1,9 @@
 package cl.inacap.estacionamiento.ui.viewmodel
 
 import android.annotation.SuppressLint
-import android.app.Application
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.Context
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
 import cl.inacap.estacionamiento.ServiceLocator
 import cl.inacap.estacionamiento.comm.BluetoothCliente
 import cl.inacap.estacionamiento.comm.BluetoothServidor
@@ -16,13 +13,13 @@ import cl.inacap.estacionamiento.comm.WifiServidor
 import cl.inacap.estacionamiento.data.model.Barrera
 import cl.inacap.estacionamiento.data.model.EstadoPlaza
 import cl.inacap.estacionamiento.data.model.Plaza
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
+import cl.inacap.estacionamiento.data.repository.ParkingRepository
 
-/** ViewModel compartido por las pantallas del Conductor, Operador y Conexión. */
-class ParkingViewModel(app: Application) : AndroidViewModel(app) {
+/**
+ * ViewModel (MVVM) compartido por las pantallas del Conductor, Operador y Conexión.
+ * Expone los flujos del repositorio para que cada Activity actualice sus vistas XML.
+ */
+class ParkingViewModel(context: Context) {
     private val repo = ServiceLocator.parking
 
     val plazas = repo.plazas
@@ -33,22 +30,10 @@ class ParkingViewModel(app: Application) : AndroidViewModel(app) {
     val enlaceArduino = repo.enlaceArduino
     val avisos = repo.avisos
     val pin: String get() = repo.pinOperador
-    val tiposEvento = cl.inacap.estacionamiento.data.repository.ParkingRepository.TIPOS_EVENTO
+    val tiposEvento = ParkingRepository.TIPOS_EVENTO
 
-    /** Reloj para los temporizadores de la UI (se actualiza cada segundo). */
-    private val _ahora = MutableStateFlow(System.currentTimeMillis())
-    val ahora: StateFlow<Long> = _ahora
-
-    private val bluetooth = (app.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager)?.adapter
-
-    init {
-        viewModelScope.launch {
-            while (true) {
-                _ahora.value = System.currentTimeMillis()
-                delay(1_000)
-            }
-        }
-    }
+    private val bluetooth =
+        (context.applicationContext.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager)?.adapter
 
     // ---- Conductor ----
     fun reservar(id: Int) = repo.reservar(id)
@@ -66,7 +51,7 @@ class ParkingViewModel(app: Application) : AndroidViewModel(app) {
 
     // ---- Conexiones ----
     val bluetoothDisponible: Boolean get() = bluetooth != null
-    val bluetoothActivo: Boolean get() = bluetooth?.isEnabled == true
+    val bluetoothActivo: Boolean get() = runCatching { bluetooth?.isEnabled == true }.getOrDefault(false)
 
     @SuppressLint("MissingPermission")
     fun dispositivosVinculados(): List<BluetoothDevice> =

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Indicadores del estado de los enlaces inalámbricos. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvEnlaceTelefono"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/punto_estado"
+        android:drawablePadding="6dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/texto_secundario"
+        android:textSize="13sp"
+        tools:text="Operador: Desconectado" />
+
+    <TextView
+        android:id="@+id/tvEnlaceTelefonoDetalle"
+        style="@style/Texto.Etiqueta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvEnlaceArduino"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:drawableStart="@drawable/punto_estado"
+        android:drawablePadding="6dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/texto_secundario"
+        android:textSize="13sp"
+        tools:text="Arduino: Desconectado" />
+</LinearLayout>

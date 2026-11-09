@@ -2,5 +2,22 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Paleta modo oscuro (informe: Material modo oscuro, alto contraste) -->
     <color name="fondo">#FF0E1116</color>
+    <color name="superficie">#FF1A1F27</color>
+    <color name="superficie_alta">#FF252B35</color>
+    <color name="borde">#FF323A46</color>
+    <color name="texto">#FFECEFF4</color>
+    <color name="texto_secundario">#FF9AA4B2</color>
+
+    <color name="verde_libre">#FF00E676</color>
+    <color name="rojo_ocupado">#FFFF5252</color>
+    <color name="ambar_reservado">#FFFFD700</color>
+    <color name="cian_conexion">#FF00B8D4</color>
+    <color name="texto_sobre_primario">#FF00210F</color>
+
+    <color name="verde_suave">#2600E676</color>
+    <color name="rojo_suave">#26FF5252</color>
+    <color name="ambar_suave">#26FFD700</color>
 </resources>

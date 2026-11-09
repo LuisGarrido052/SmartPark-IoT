@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Terminal Android 1: Conductor. Mapa de plazas, reserva con temporizador y apertura de barrera. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo"
+    android:orientation="vertical"
+    tools:context=".ui.ConductorActivity">
+
+    <include
+        android:id="@+id/encabezado"
+        layout="@layout/include_encabezado" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="24dp">
+
+            <include
+                android:id="@+id/enlaces"
+                layout="@layout/include_enlaces" />
+
+            <TextView
+                android:id="@+id/tvModoLocal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/modo_local"
+                android:textColor="@color/ambar_reservado"
+                android:textSize="13sp" />
+
+            <!-- Tarjeta de la reserva activa (visible solo si el conductor tiene plaza) -->
+            <LinearLayout
+                android:id="@+id/cardReserva"
+                style="@style/Tarjeta"
+                android:background="@drawable/bg_reserva"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/tvReservaTitulo"
+                    style="@style/Texto.Seccion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Plaza #5 - Nivel 1 reservada" />
+
+                <TextView
+                    android:id="@+id/tvReservaPatente"
+                    style="@style/Texto.Secundario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Patente: ABCD12" />
+
+                <LinearLayout
+                    android:id="@+id/grupoTemporizador"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Texto.Etiqueta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/tiempo_restante" />
+
+                    <TextView
+                        android:id="@+id/tvTiempoRestante"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="monospace"
+                        android:textColor="@color/ambar_reservado"
+                        android:textSize="40sp"
+                        android:textStyle="bold"
+                        tools:text="14:32" />
+
+                    <ProgressBar
+                        android:id="@+id/pbReserva"
+                        style="@android:style/Widget.Material.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:max="900"
+                        android:progressTint="@color/ambar_reservado"
+                        tools:progress="600" />
+
+                    <Button
+                        android:id="@+id/btnAbrirEntrada"
+                        style="@style/Boton.Primario"
+                        android:text="@string/btn_abrir_entrada" />
+
+                    <Button
+                        android:id="@+id/btnCancelarReserva"
+                        style="@style/Boton.Texto"
+                        android:layout_width="match_parent"
+                        android:text="@string/btn_cancelar_reserva"
+                        android:textColor="@color/rojo_ocupado" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnAbrirSalida"
+                    style="@style/Boton.Primario"
+                    android:backgroundTint="@color/cian_conexion"
+                    android:text="@string/btn_abrir_salida"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- Resumen de disponibilidad -->
+            <LinearLayout
+                style="@style/Tarjeta"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Texto.Etiqueta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/plazas_libres" />
+
+                    <TextView
+                        android:id="@+id/tvLibres"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/verde_libre"
+                        android:textSize="30sp"
+                        android:textStyle="bold"
+                        tools:text="18 / 24" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvLeyenda"
+                    style="@style/Texto.Etiqueta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/leyenda"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <RadioGroup
+                android:id="@+id/rgNivel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:checkedButton="@+id/rbNivel1"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbNivel1"
+                    style="@style/Opcion"
+                    android:text="@string/nivel_1" />
+
+                <RadioButton
+                    android:id="@+id/rbNivel2"
+                    style="@style/Opcion"
+                    android:text="@string/nivel_2" />
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/btnBuscarPlaza"
+                style="@style/Boton.Secundario"
+                android:text="@string/btn_buscar" />
+
+            <TextView
+                android:id="@+id/tvAyudaMapa"
+                style="@style/Texto.Etiqueta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/toca_plaza" />
+
+            <ProgressBar
+                android:id="@+id/pbCargandoPlazas"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="24dp"
+                android:indeterminateTint="@color/verde_libre" />
+
+            <!-- Mapa de plazas: 3 columnas, las celdas se inflan desde item_plaza.xml -->
+            <GridLayout
+                android:id="@+id/gridPlazas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:columnCount="3"
+                android:useDefaultMargins="false" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
