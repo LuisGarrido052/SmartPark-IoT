@@ -126,3 +126,4 @@ mensajes, el rechazo de mensajes alterados, repetidos o vencidos, el protocolo d
 comandos hacia el Arduino (12 pruebas). La firma se comprobó contra el propio sketch: el vector de prueba
 `2dd4bb0be6a02c04` lo calculó el código SHA-256/HMAC del `.ino`.
 Ejecutar desde Android Studio (clic derecho → *Run tests*) o con `gradlew test`.
+Evidencia de la última ejecución (12/12 aprobadas): [docs/pruebas](docs/pruebas/README.md).
