@@ -10,20 +10,25 @@ import org.json.JSONObject
  * Protocolo con el Arduino UNO R3 (texto simple, fácil de leer con Serial.readStringUntil('\n')).
  *
  *  Arduino -> App
+ *    N,<8 hex>       Desafío (nonce) de la conexión, en respuesta a "H".
  *    P,<n>,<0|1>     Sensor de la plaza n (1 = ocupada). La plaza n corresponde a la 100+n (Nivel 1).
  *    B,<E|S>,<0|1>   Estado de la barrera de Entrada/Salida (1 = abierta).
+ *    E,<motivo>      Comando rechazado (AUTH = firma o contador inválido, BLOQUEO = demasiados intentos).
  *
  *  App -> Arduino
- *    A,<E|S>         Abrir barrera
- *    C,<E|S>         Cerrar barrera
- *    R,<n>,<0|1>     Plaza n reservada (enciende/apaga LED ámbar)
- *    ?               Pedir estado de todos los sensores
+ *    H               Hola: pide un desafío nuevo (sin firma).
+ *    ?               Pedir estado de todos los sensores (sin firma, solo lectura).
+ *    A,<E|S>         Abrir barrera                      } viajan firmados por AutenticadorArduino:
+ *    C,<E|S>         Cerrar barrera                     }   <comando>|<contador>|<firma HMAC>
+ *    R,<n>,<0|1>     Plaza n reservada (LED ámbar)      }
  */
 object ProtocoloArduino {
 
     sealed class Mensaje {
         data class Sensor(val plazaId: Int, val ocupada: Boolean) : Mensaje()
         data class EstadoBarrera(val barrera: Barrera, val abierta: Boolean) : Mensaje()
+        data class Desafio(val nonce: String) : Mensaje()
+        data class Rechazo(val motivo: String) : Mensaje()
     }
 
     fun interpretar(linea: String): Mensaje? {
@@ -37,6 +42,8 @@ object ProtocoloArduino {
                 val b = Barrera.desdeCodigo(p[1]) ?: return null
                 Mensaje.EstadoBarrera(b, p[2] == "1")
             }
+            p.size == 2 && p[0] == "N" -> Mensaje.Desafio(p[1].lowercase())
+            p.size == 2 && p[0] == "E" -> Mensaje.Rechazo(p[1])
             else -> null
         }
     }
@@ -45,6 +52,7 @@ object ProtocoloArduino {
     fun cerrar(b: Barrera) = "C,${b.codigo}"
     fun reservada(plazaId: Int, reservada: Boolean) = "R,${plazaId - 100},${if (reservada) 1 else 0}"
     const val PEDIR_ESTADO = "?"
+    const val HOLA = "H"
 }
 
 /**

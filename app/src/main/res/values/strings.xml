@@ -80,6 +80,9 @@
     <string name="sin_vinculados">No hay dispositivos vinculados.</string>
     <string name="arduino_titulo">Placa Arduino UNO R3 (módulo HC-05)</string>
     <string name="arduino_ayuda">Sensores de plaza (HC-SR04) y barrera (servo). Vincula el HC-05 en Ajustes &gt; Bluetooth (PIN habitual 1234).</string>
+    <string name="campo_clave_arduino">Clave del enlace con el Arduino</string>
+    <string name="hint_clave_arduino">La misma CLAVE_ENLACE del sketch</string>
+    <string name="error_clave_arduino">La clave debe tener al menos 8 caracteres</string>
     <string name="sin_bluetooth">Este teléfono no tiene Bluetooth</string>
     <string name="bt_apagado">Activa el Bluetooth del teléfono</string>
     <string name="consejo_hotspot">Consejo: si la red Wi-Fi de la sede bloquea la comunicación entre equipos, activa la zona Wi-Fi (hotspot) en el teléfono del operador y conecta el otro teléfono a ella. La IP del operador suele ser 192.168.43.1.</string>

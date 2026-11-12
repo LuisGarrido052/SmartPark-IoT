@@ -247,6 +247,21 @@
                     android:text="@string/arduino_ayuda" />
 
                 <TextView
+                    style="@style/Texto.Etiqueta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:labelFor="@+id/etClaveArduino"
+                    android:text="@string/campo_clave_arduino" />
+
+                <EditText
+                    android:id="@+id/etClaveArduino"
+                    style="@style/Campo"
+                    android:hint="@string/hint_clave_arduino"
+                    android:importantForAutofill="no"
+                    android:inputType="textPassword" />
+
+                <TextView
                     android:id="@+id/tvAvisoArduino"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

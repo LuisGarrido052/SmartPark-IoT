@@ -71,9 +71,10 @@ class ParkingViewModel(context: Context) {
         repo.conectar(BluetoothCliente(bt, d, TipoEnlace.TELEFONO), pin.trim())
     }
 
-    fun conectarArduino(d: BluetoothDevice) {
+    /** [clave]: la misma CLAVE_ENLACE escrita en el sketch del Arduino. */
+    fun conectarArduino(d: BluetoothDevice, clave: String) {
         val bt = bluetooth ?: return
-        repo.conectar(BluetoothCliente(bt, d, TipoEnlace.ARDUINO))
+        repo.conectar(BluetoothCliente(bt, d, TipoEnlace.ARDUINO), clave)
     }
 
     fun desconectar(tipo: TipoEnlace) = repo.desconectar(tipo)

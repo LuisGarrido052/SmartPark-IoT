@@ -94,7 +94,9 @@ conductor elige al operador de la lista e ingresa el PIN.
 
 1. Carga `arduino/smartpark_r3/smartpark_r3.ino` con Arduino IDE (librerías incluidas: SoftwareSerial y Servo).
 2. Vincula el HC-05 en Ajustes > Bluetooth del teléfono (PIN `1234` o `0000`).
-3. En la app (idealmente en el Operador): **Conexión** → *Placa Arduino* → elige el HC-05.
+3. En la app (idealmente en el Operador): **Conexión** → *Placa Arduino* → escribe la **clave del enlace**
+   (la constante `CLAVE_ENLACE` del sketch, por defecto `SmartPark2026`) → elige el HC-05.
+   En el log aparece *"Arduino autenticado: comandos firmados con HMAC-SHA256"*.
 4. Al tapar un sensor HC-SR04, la plaza 101/102 pasa a **Ocupada** en ambos teléfonos.
    Al abrir una barrera desde la app, el servo se mueve.
 
@@ -112,12 +114,15 @@ reenvía todo al Conductor.
 | Control de acceso (RBAC) | Conductor solo reserva y abre con reserva vigente. Operador controla barreras y plazas. Crear Operador requiere código. |
 | Datos en tránsito | Cada mensaje entre teléfonos va cifrado con AES-256-GCM y firmado con HMAC-SHA256 (llaves derivadas del PIN). |
 | Ataques de repetición | Cada mensaje lleva marca de tiempo (vigencia 30 s) y nonce de un solo uso. |
+| Enlace con el Arduino | Desafío-respuesta: el Arduino entrega un desafío aleatorio por conexión y solo acepta comandos de barrera/LED firmados con HMAC-SHA256 (clave compartida) y con contador creciente. 5 rechazos → bloqueo de 60 s. |
 | Auditoría | Log de eventos en SQLite (sensores, reservas, barreras, seguridad, conexiones) con filtros. |
 | Fallo seguro (OT) | Al encender, el Arduino deja las barreras cerradas. Las conexiones se reintentan solas. |
-| Red | `network_security_config` prohíbe tráfico HTTP sin cifrar. |
+| Red | `network_security_config` prohíbe HTTP sin cifrar (aplica a HTTP; el socket TCP entre teléfonos se protege con el cifrado propio de la fila "Datos en tránsito"). |
 
 ## Pruebas
 
 `app/src/test/.../SeguridadTest.kt` prueba el hash de contraseñas, las validaciones, el cifrado y la firma de
-mensajes, el rechazo de mensajes alterados, repetidos o vencidos, y el protocolo del Arduino.
+mensajes, el rechazo de mensajes alterados, repetidos o vencidos, el protocolo del Arduino y la firma de
+comandos hacia el Arduino (12 pruebas). La firma se comprobó contra el propio sketch: el vector de prueba
+`2dd4bb0be6a02c04` lo calculó el código SHA-256/HMAC del `.ino`.
 Ejecutar desde Android Studio (clic derecho → *Run tests*) o con `gradlew test`.
