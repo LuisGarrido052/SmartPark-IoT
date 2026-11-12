@@ -2,6 +2,7 @@ package cl.inacap.estacionamiento
 
 import cl.inacap.estacionamiento.comm.ProtocoloArduino
 import cl.inacap.estacionamiento.data.model.Barrera
+import cl.inacap.estacionamiento.security.AutenticadorArduino
 import cl.inacap.estacionamiento.security.CanalSeguro
 import cl.inacap.estacionamiento.security.PasswordHasher
 import cl.inacap.estacionamiento.security.Validaciones
@@ -91,6 +92,41 @@ class SeguridadTest {
         assertNull(ProtocoloArduino.interpretar("hola"))
         assertEquals("A,S", ProtocoloArduino.abrir(Barrera.SALIDA))
         assertEquals("R,2,1", ProtocoloArduino.reservada(102, true))
+    }
+
+    @Test
+    fun protocoloArduino_interpretaDesafioYRechazo() {
+        assertEquals(ProtocoloArduino.Mensaje.Desafio("0adf2ff0"), ProtocoloArduino.interpretar("N,0ADF2FF0"))
+        assertEquals(ProtocoloArduino.Mensaje.Rechazo("AUTH"), ProtocoloArduino.interpretar("E,AUTH"))
+        assertTrue(AutenticadorArduino.desafioValido("0adf2ff0"))
+        assertFalse(AutenticadorArduino.desafioValido("xyz"))
+    }
+
+    @Test
+    fun autenticadorArduino_firmaIgualQueElSketch() {
+        // Vector calculado por el sketch smartpark_r3.ino (SHA-256/HMAC propios) y aceptado por él
+        val firma = AutenticadorArduino.firma("SmartPark2026".toByteArray(), "0adf2ff0", 1, "A,E")
+        assertEquals("2dd4bb0be6a02c04", firma)
+    }
+
+    @Test
+    fun autenticadorArduino_sinDesafioNoFirmaYContadorCrece() {
+        val aut = AutenticadorArduino("SmartPark2026")
+        assertNull("sin desafío no se puede enviar nada", aut.firmar("A,E"))
+        aut.nuevoDesafio("0adf2ff0")
+        assertEquals("A,E|1|2dd4bb0be6a02c04", aut.firmar("A,E"))
+        assertTrue(aut.firmar("A,E")!!.startsWith("A,E|2|"))
+        aut.reiniciar()
+        assertNull(aut.firmar("A,E"))
+    }
+
+    @Test
+    fun autenticadorArduino_claveDistintaDaFirmaDistinta() {
+        val buena = AutenticadorArduino.firma("SmartPark2026".toByteArray(), "0adf2ff0", 1, "A,E")
+        val mala = AutenticadorArduino.firma("OtraClave99".toByteArray(), "0adf2ff0", 1, "A,E")
+        val otraSesion = AutenticadorArduino.firma("SmartPark2026".toByteArray(), "5e8e6b8d", 1, "A,E")
+        assertNotEquals(buena, mala)
+        assertNotEquals(buena, otraSesion)
     }
 
     private fun esperarError(codigo: String, bloque: () -> Unit) {

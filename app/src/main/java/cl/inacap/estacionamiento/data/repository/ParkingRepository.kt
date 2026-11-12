@@ -12,6 +12,7 @@ import cl.inacap.estacionamiento.data.model.Evento
 import cl.inacap.estacionamiento.data.model.Plaza
 import cl.inacap.estacionamiento.data.model.Rol
 import cl.inacap.estacionamiento.data.model.Sesion
+import cl.inacap.estacionamiento.security.AutenticadorArduino
 import cl.inacap.estacionamiento.security.CanalSeguro
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -70,6 +71,8 @@ class ParkingRepository(private val db: SmartParkDb) {
     val pinOperador: String = CanalSeguro.generarPin()
 
     private var canal: CanalSeguro? = null
+    /** Firma los comandos hacia el Arduino (desafío-respuesta HMAC). */
+    private var autArduino: AutenticadorArduino? = null
     @Volatile private var sesion: Sesion? = null
     private val trabajosEnlace = mutableMapOf<TipoEnlace, Job>()
     private val cierresAutomaticos = mutableMapOf<Barrera, Job>()
@@ -106,14 +109,17 @@ class ParkingRepository(private val db: SmartParkDb) {
     // ===================== Conexiones =====================
 
     /**
-     * Activa un enlace. Para TELEFONO se exige PIN: con él se derivan las llaves de cifrado y firma.
+     * Activa un enlace.
+     *  - TELEFONO: se exige PIN; con él se derivan las llaves de cifrado y firma (CanalSeguro).
+     *  - ARDUINO: se exige la clave compartida con el sketch; con ella se firman los comandos.
      */
-    fun conectar(enlace: ConexionIoT, pin: String? = null) = scope.launch {
+    fun conectar(enlace: ConexionIoT, clave: String? = null) = scope.launch {
         desconectarInterno(enlace.tipo)
         if (enlace.tipo == TipoEnlace.TELEFONO) {
-            canal = CanalSeguro(pin ?: pinOperador)
+            canal = CanalSeguro(clave ?: pinOperador)
             _enlaceTelefono.value = enlace
         } else {
+            autArduino = AutenticadorArduino(clave ?: "")
             _enlaceArduino.value = enlace
         }
         enlace.iniciar(io)
@@ -149,7 +155,11 @@ class ParkingRepository(private val db: SmartParkDb) {
     private suspend fun alConectar(enlace: ConexionIoT) {
         evento("CONEXION", "Enlace establecido: ${enlace.medio}")
         when (enlace.tipo) {
-            TipoEnlace.ARDUINO -> enlace.enviar(ProtocoloArduino.PEDIR_ESTADO)
+            TipoEnlace.ARDUINO -> {
+                // Conexión nueva = desafío nuevo. Hasta recibirlo no se envía ningún comando.
+                autArduino?.reiniciar()
+                enlace.enviar(ProtocoloArduino.HOLA)
+            }
             TipoEnlace.TELEFONO ->
                 if (rol == Rol.OPERADOR) difundirEstado()
                 else enviarTelefono(ProtocoloTelefono.mensaje(ProtocoloTelefono.SOLICITAR_ESTADO))
@@ -162,8 +172,16 @@ class ParkingRepository(private val db: SmartParkDb) {
         enlace.enviar(c.proteger(json))
     }
 
-    private suspend fun enviarArduino(linea: String) {
-        _enlaceArduino.value?.enviar(linea)
+    /** Envía un comando de actuación al Arduino, firmado con el desafío de la conexión actual. */
+    private suspend fun enviarArduino(comando: String) {
+        val enlace = _enlaceArduino.value ?: return
+        if (enlace.estado.value.fase != FaseConexion.CONECTADO) return
+        val firmado = autArduino?.firmar(comando)
+        if (firmado == null) {
+            evento("SEGURIDAD", "Comando $comando no enviado: el Arduino aún no entrega su desafío")
+            return
+        }
+        enlace.enviar(firmado)
     }
 
     private suspend fun difundirEstado() {
@@ -219,6 +237,17 @@ class ParkingRepository(private val db: SmartParkDb) {
                     difundirEstado()
                 }
             }
+            is ProtocoloArduino.Mensaje.Desafio -> {
+                if (!AutenticadorArduino.desafioValido(m.nonce)) {
+                    evento("SEGURIDAD", "Desafío del Arduino con formato inválido")
+                    return
+                }
+                autArduino?.nuevoDesafio(m.nonce)
+                evento("SEGURIDAD", "Arduino autenticado: comandos firmados con HMAC-SHA256")
+                _enlaceArduino.value?.enviar(ProtocoloArduino.PEDIR_ESTADO)
+            }
+            is ProtocoloArduino.Mensaje.Rechazo ->
+                evento("SEGURIDAD", "Arduino rechazó un comando (${m.motivo}): revisa la clave del enlace")
             null -> Unit // Líneas de depuración del Arduino se ignoran
         }
     }

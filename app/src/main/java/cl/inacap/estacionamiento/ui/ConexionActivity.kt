@@ -19,6 +19,7 @@ import cl.inacap.estacionamiento.comm.PUERTO_SMARTPARK
 import cl.inacap.estacionamiento.comm.TipoEnlace
 import cl.inacap.estacionamiento.comm.ipLocal
 import cl.inacap.estacionamiento.data.model.Rol
+import cl.inacap.estacionamiento.security.AutenticadorArduino
 import cl.inacap.estacionamiento.ui.viewmodel.ParkingViewModel
 import kotlinx.coroutines.CoroutineScope
 
@@ -49,6 +50,7 @@ class ConexionActivity : BaseActivity() {
 
     private lateinit var tvEstadoArduino: TextView
     private lateinit var tvAvisoArduino: TextView
+    private lateinit var etClaveArduino: EditText
     private lateinit var btnPermisoBtArduino: Button
     private lateinit var listaArduino: LinearLayout
     private lateinit var btnDesconectarArduino: Button
@@ -81,6 +83,7 @@ class ConexionActivity : BaseActivity() {
         btnDesconectarTelefono = findViewById(R.id.btnDesconectarTelefono)
         tvEstadoArduino = findViewById(R.id.tvEstadoArduino)
         tvAvisoArduino = findViewById(R.id.tvAvisoArduino)
+        etClaveArduino = findViewById(R.id.etClaveArduino)
         btnPermisoBtArduino = findViewById(R.id.btnPermisoBtArduino)
         listaArduino = findViewById(R.id.listaDispositivosArduino)
         btnDesconectarArduino = findViewById(R.id.btnDesconectarArduino)
@@ -181,16 +184,25 @@ class ConexionActivity : BaseActivity() {
         listaArduino.removeAllViews()
         btnPermisoBtArduino.visibility = View.GONE
         tvAvisoArduino.visibility = View.GONE
+        etClaveArduino.isEnabled = !conectado
         if (conectado) return
         when {
             !vm.bluetoothDisponible -> mostrarAvisoArduino(R.string.sin_bluetooth)
             !tienePermisoBluetooth() -> btnPermisoBtArduino.visibility = View.VISIBLE
             !vm.bluetoothActivo -> mostrarAvisoArduino(R.string.bt_apagado)
             else -> llenarDispositivos(listaArduino) { d ->
-                aviso(getString(R.string.conectando_a, d.name ?: d.address))
-                vm.conectarArduino(d)
+                if (claveArduinoValida()) {
+                    aviso(getString(R.string.conectando_a, d.name ?: d.address))
+                    vm.conectarArduino(d, etClaveArduino.text.toString())
+                }
             }
         }
+    }
+
+    private fun claveArduinoValida(): Boolean {
+        val ok = etClaveArduino.text.length >= AutenticadorArduino.LARGO_MINIMO_CLAVE
+        etClaveArduino.error = if (ok) null else getString(R.string.error_clave_arduino)
+        return ok
     }
 
     private fun mostrarAvisoArduino(texto: Int) {

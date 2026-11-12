@@ -5,7 +5,6 @@
     <!-- Wi-Fi local: socket TCP entre los dos teléfonos -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <!-- Bluetooth clásico (teléfono-teléfono o módulo HC-05 del Arduino) -->
     <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
